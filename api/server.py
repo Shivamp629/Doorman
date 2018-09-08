@@ -5,7 +5,7 @@ app = Flask(__name__)
 api = Api(app)
 
 USERS = {
-    'raghav': {'user_id': '1'
+    '1': {'user': 'raghav'
               'playlist':
                 {
 
@@ -13,7 +13,7 @@ USERS = {
               'emotion':
               },
 
-    'varun': {'user_id': '2'
+    '2': {'user': 'varun'
               'playlist':
                 {
 
@@ -22,7 +22,7 @@ USERS = {
               },
 
 
-    'shivam': {'user_id': '3'
+    '3': {'user': 'shivam'
               'playlist':
                 {
 
@@ -30,7 +30,7 @@ USERS = {
               'emotion':
               },
 
-    'akhila': {'user_id': '4'
+    '4': {'user': 'akhila'
               'playlist':
                 {
 
@@ -42,7 +42,7 @@ USERS = {
 
 def abort_if_user_doesnt_exist(user_id):
     if user_id not in USERS:
-        abort(404, message="user {} doesn't exist".format(user_id))
+        abort(404, message="user {} doesn't exist".format(USERS[user_id].user))
 
 parser = reqparse.RequestParser()
 parser.add_argument('task')
@@ -72,15 +72,6 @@ class User(Resource):
 class Users(Resource):
     def get(self):
         return USERS
-
-    def post(self):
-        args = parser.parse_args()
-        user_id = int(max(USERS.keys()).lstrip('user')) + 1
-        user_id = 'user%i' % user_id
-        USERS[user_id] = {'task': args['task']}
-        return USERS[user_id], 201
-
-
 # userList
 # shows a list of all USERS, and lets you POST to add new tasks
 class DetermineUser(Resource):
@@ -94,9 +85,8 @@ class DetermineUser(Resource):
 api.add_resource(Users, '/users')
 api.add_resource(User, '/users/<user_id>')
 api.add_resource(DetermineUser, '/DetermineUser')
-api.add_resource(Emotion, '/users/<user_id>/emotion')
-api.add_resource(Playlist, '/users/<user_id>/<emotion>/playlist')
-api.add_resource(Song, '/users/<user_id>/<emotion>/playlist/<song>')
+api.add_resource(Playlist, '/users/<user_id>/playlist')
+api.add_resource(Song, '/users/<user_id>/playlist/song')
 
 if __name__ == '__main__':
     app.run(debug=True)
