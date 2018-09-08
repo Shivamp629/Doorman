@@ -1,54 +1,55 @@
 from flask import Flask
 from flask_restful import reqparse, abort, Api, Resource
 import random
+import requests
 
 app = Flask(__name__)
 api = Api(app)
 
 USERS = {
-    '1': {'user': 'raghav',
-          'emotion':
+    0: {'user': 'Raghav',
+          'emotion': '',
           'playlists':
             {
-                'happy': []
+                'happy': [],
 
-                'sad': []
+                'sad': [],
 
                 'angry': []
             }
          },
 
-    '2': {'user': 'varun'
-          'emotion':
+    1: {'user': 'Varun',
+          'emotion': '',
           'playlists':
             {
-                'happy': []
+                'happy': [],
 
-                'sad': []
+                'sad': [],
 
                 'angry': []
             }
          },
 
-    '3': {'user': 'shivam'
-          'emotion':
+    2: {'user': 'Shivam',
+          'emotion': '',
           'playlists':
             {
-                'happy': []
+                'happy': [],
 
-                'sad': []
+                'sad': [],
 
                 'angry': []
             }
          },
 
-    '4': {'user': 'akhila'
-          'emotion':
+    3: {'user': 'Akhila',
+          'emotion': '',
           'playlists':
             {
-                'happy': []
+                'happy': [],
 
-                'sad': []
+                'sad': [],
 
                 'angry': []
             }
@@ -64,27 +65,17 @@ class User(Resource):
     def get(self, user_id):
         abort_if_user_doesnt_exist(user_id)
         return USERS.get(user_id)
-    '''
-    def delete(self, user_id):
-        abort_if_user_doesnt_exist(user_id)
-        del USERS[user_id]
-        return '', 204
 
     def put(self, user_id):
         args = parser.parse_args()
-        task = {'task': args['task']}
-        USERS[user_id] = task
-        return task, 201
-    '''
+        emotion = {'emotion': args['emotion']}
+        USERS[user_id]['emotion'] = emotion
+        requests.post("http://localhost:3000/emotion", data=emotion)
+        return emotion, 201
 
 class Users(Resource):
     def get(self):
         return USERS
-
-class DetermineUser(Resource):
-    def get(self):
-        user_id = get_user_id()
-        return {'user_id': user_id}
 
 class Playlist(Resource):
     def get(self,user_id):
@@ -105,7 +96,6 @@ class Song(Resource):
 ##
 api.add_resource(Users, '/users')
 api.add_resource(User, '/users/<int:user_id>')
-api.add_resource(DetermineUser, '/DetermineUser')
 api.add_resource(Playlist, '/users/<int:user_id>/playlist')
 api.add_resource(Song, '/users/<int:user_id>/playlist/song')
 
