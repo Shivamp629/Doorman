@@ -96,7 +96,6 @@ class Song(Resource):
 ##
 api.add_resource(Users, '/users')
 api.add_resource(User, '/users/<int:user_id>')
-api.add_resource(DetermineUser, '/DetermineUser')
 api.add_resource(Playlist, '/users/<int:user_id>/playlist')
 api.add_resource(Song, '/users/<int:user_id>/playlist/song')
 
