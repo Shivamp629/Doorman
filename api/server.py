@@ -5,9 +5,38 @@ app = Flask(__name__)
 api = Api(app)
 
 USERS = {
-    'user1': {'task': 'build an API'},
-    'user2': {'task': '?????'},
-    'user3': {'task': 'profit!'},
+    'raghav': {'user_id': '1'
+              'playlist':
+                {
+
+                }
+              'emotion':
+              },
+
+    'varun': {'user_id': '2'
+              'playlist':
+                {
+
+                }
+              'emotion':
+              },
+
+
+    'shivam': {'user_id': '3'
+              'playlist':
+                {
+
+                }
+              'emotion':
+              },
+
+    'akhila': {'user_id': '4'
+              'playlist':
+                {
+
+                }
+              'emotion':
+              }
 }
 
 
@@ -51,12 +80,23 @@ class Users(Resource):
         USERS[user_id] = {'task': args['task']}
         return USERS[user_id], 201
 
+
+# userList
+# shows a list of all USERS, and lets you POST to add new tasks
+class DetermineUser(Resource):
+    def get(self):
+        user_id = get_user_id()
+        return {'user': user_id}
+
 ##
 ## Actually setup the Api resource routing here
 ##
 api.add_resource(Users, '/users')
 api.add_resource(User, '/users/<user_id>')
-
+api.add_resource(DetermineUser, '/DetermineUser')
+api.add_resource(Emotion, '/users/<user_id>/emotion')
+api.add_resource(Playlist, '/users/<user_id>/<emotion>/playlist')
+api.add_resource(Song, '/users/<user_id>/<emotion>/playlist/<song>')
 
 if __name__ == '__main__':
     app.run(debug=True)
