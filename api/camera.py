@@ -1,16 +1,17 @@
 import numpy as np
 import cv2
 from keras.preprocessing import image
-from keras.models import model_from_json
+from keras.models import model_from_json, load_model
 
 face_cascade = cv2.CascadeClassifier('models/haarcascade_frontalface_alt.xml')
 emotion_model = model_from_json(open("models/facial_expression_model_structure.json", "r").read())
 emotion_model.load_weights('models/facial_expression_model_weights.h5')
 emotions = ('angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral')
-# name_model = load_model('name_model.h5')
+name_model = load_model('models/name_model3.h5')
 
 cap = cv2.VideoCapture(0)
-
+people = {0:"Raghav", 1:"Varun", 2:"Shivam", 3:"Akhila", 4:"Rando"}
+counter = 0
 while(True):
 	# take frame, rescale, detect face
 	ret, img = cap.read()
@@ -25,14 +26,18 @@ while(True):
 			detected_face = img[int(y):int(y+h), int(x):int(x+w)] #crop detected face
 			detected_face = cv2.cvtColor(detected_face, cv2.COLOR_BGR2GRAY) #transform to gray scale
 			detected_face = cv2.resize(detected_face, (48, 48)) #resize to 48x48
-
+			cv2.imwrite( "images/raghav" + str(counter) + ".jpg", detected_face );
+			counter += 1
 			face_pixels = image.img_to_array(detected_face)
 			face_pixels = np.expand_dims(face_pixels, axis = 0)
 			face_pixels /= 255 #pixels are in scale of [0, 255]. normalize all pixels in scale of [0, 1]
 
 			emotion_preds = emotion_model.predict(face_pixels) #store probabilities of 7 expressions
-			# name_pred = name_model.predict(face_pixels)
 
+			name_pix = np.reshape(face_pixels, (1, 48*48))
+			name_pred = name_model.predict(name_pix)
+			name = people[np.argmax(name_pred)]
+			print(name)
 			#background of expression list
 			overlay = img.copy()
 			opacity = 0.4
@@ -52,7 +57,6 @@ while(True):
 				color = (255,255,255)
 				cv2.putText(img, emotion, (int(x+w+15), int(y-12+i*20)), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
 			emotion = max(emotionArr, key=lambda item:item[1])[0]
-			print(emotion)
 
 	cv2.imshow('img',img)
 
