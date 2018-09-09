@@ -49,7 +49,7 @@ def changeSong(message):
     elif emotion == 'fear':
         song = '4V90AmXnguw'
     elif emotion == 'surprise':
-        song = 'xTlNMmZKwpA'
+        song = 'gkBvuhBBhvA'
     elif emotion == 'neutral':
         song = 'ymHBUyui_ws'
     else:
