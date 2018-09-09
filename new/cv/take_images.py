@@ -26,7 +26,7 @@ while(counter < images_to_take):
 			detected_face = img[int(y):int(y+h), int(x):int(x+w)] #crop detected face
 			detected_face = cv2.cvtColor(detected_face, cv2.COLOR_BGR2GRAY) #transform to gray scale
 			detected_face = cv2.resize(detected_face, (48, 48)) #resize to 48x48
-			cv2.imwrite( "images/" + person + "_" + str(counter) + ".jpg", detected_face );
+			cv2.imwrite( "training-data/5/" + person + "_" + str(counter) + ".jpg", detected_face );
 			counter += 1
 
 	cv2.imshow('img',img)

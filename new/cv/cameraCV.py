@@ -4,21 +4,24 @@ from keras.preprocessing import image
 from keras.models import model_from_json, load_model
 from socket import *
 import sys, os, time, json, hashlib, base64
+import facial
 
 cvSocket = None
 holdingArray = []
+nameArray = []
 user = "Unknown"
 
 def runCV():
-	global cvSocket, holdingArray, user
-	face_cascade = cv2.CascadeClassifier('/Users/varunballari/Desktop/Doorman/api//models/haarcascade_frontalface_alt.xml')
-	emotion_model = model_from_json(open('/Users/varunballari/Desktop/Doorman/api//models/facial_expression_model_structure.json', 'r').read())
-	emotion_model.load_weights('/Users/varunballari/Desktop/Doorman/api//models/facial_expression_model_weights.h5')
+	global cvSocket, holdingArray
+	face_cascade = cv2.CascadeClassifier('models/haarcascade_frontalface_alt.xml')
+	emotion_model = model_from_json(open('models/facial_expression_model_structure.json', 'r').read())
+	emotion_model.load_weights('models/facial_expression_model_weights.h5')
 	emotions = ('angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral')
-	name_model = load_model('/Users/varunballari/Desktop/Doorman/api//models/name_model3.h5')
+	# name_model = load_model('models/name_model3.h5')
+	face_recognizer = facial.setup()
 
 	cap = cv2.VideoCapture(0)
-	people = {0:"Raghav", 1:"Varun", 2:"Shivam", 3:"Akhila", 4:"Rando"}
+	people = {0:"Raghav", 1:"Varun", 2:"Shivam", 3:"Akhila", 4:"Nihal"}
 	counter = 0
 
 	cvSocket = socket(AF_INET, SOCK_DGRAM)
@@ -39,7 +42,15 @@ def runCV():
 				detected_face = img[int(y):int(y+h), int(x):int(x+w)] #crop detected face
 				detected_face = cv2.cvtColor(detected_face, cv2.COLOR_BGR2GRAY) #transform to gray scale
 				detected_face = cv2.resize(detected_face, (48, 48)) #resize to 48x48
-				cv2.imwrite( "images/raghav" + str(counter) + ".jpg", detected_face );
+
+				name_pred = facial.predict(detected_face, face_recognizer)
+				name = (people[name_pred[0]])
+				if len(nameArray) < 10:
+					nameArray.append(name)
+				else:
+					del nameArray[0]
+					nameArray.append(name)
+
 				counter += 1
 				face_pixels = image.img_to_array(detected_face)
 				face_pixels = np.expand_dims(face_pixels, axis = 0)
@@ -47,10 +58,6 @@ def runCV():
 
 				emotion_preds = emotion_model.predict(face_pixels) #store probabilities of 7 expressions
 
-				name_pix = np.reshape(face_pixels, (1, 48*48))
-				name_pred = name_model.predict(name_pix)
-				name = people[np.argmax(name_pred)]
-				# print(name)
 				#background of expression list
 				overlay = img.copy()
 				opacity = 0.4
@@ -81,6 +88,7 @@ def runCV():
 				print(holdingArray)
 
 				maxEmotion = mostFrequent(holdingArray)
+				user = mostFrequent(nameArray)
 				strWithUser = maxEmotion + "," + user
 				cvSocket.sendto(strWithUser.encode(), ('127.0.0.1', 8003))
 
