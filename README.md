@@ -1,5 +1,7 @@
 # ExpressMusic- (Earlier Doorman)
 
+ExpressMusic lets you identify people in real time and play songs based on their detected facial expressions!
+
 Instructions to run:
 1. Clone github repo
 2. Open up 2 terminal windows and run the following commands
