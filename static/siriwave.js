@@ -118,11 +118,11 @@ SiriWaveCurve.prototype.draw = function() {
 };
 
 SiriWaveCurve.prototype.definition = [
-{ attenuation: -2, lineWidth: 1, opacity: 0.1 },
-{ attenuation: -6, lineWidth: 1, opacity: 0.2 },
-{ attenuation: 4, lineWidth: 1, opacity: 0.4 },
-{ attenuation: 2, lineWidth: 1, opacity: 0.6 },
-{ attenuation: 1, lineWidth: 1.5, opacity: 1 },
+{ attenuation: -2, lineWidth: 8, opacity: 0.1 },
+{ attenuation: -6, lineWidth: 8, opacity: 0.2 },
+{ attenuation: 4, lineWidth: 8, opacity: 0.4 },
+{ attenuation: 2, lineWidth: 8, opacity: 0.6 },
+{ attenuation: 1, lineWidth: 8, opacity: 1 },
 ];
 
 // Expose API

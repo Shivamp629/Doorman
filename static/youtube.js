@@ -1,5 +1,5 @@
 var tag = document.createElement('script');
-var songID = 'dUaCEs3HfdI';
+var songID = 'uhx8NjSsdY0';
 
 tag.src = "https://www.youtube.com/iframe_api";
 
@@ -9,8 +9,8 @@ firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 var player;
 function onYouTubeIframeAPIReady() {
   player = new YT.Player('player', {
-    height: '390',
-    width: '640',
+    height: $(document).height(),
+    width: $(document).width(),
     videoId: songID,
     events: {
       'onReady': onPlayerReady,
